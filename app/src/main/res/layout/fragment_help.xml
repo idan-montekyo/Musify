@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.HelpFragment"
+    android:background="@color/dark_background2">
+
+    <ImageView
+        android:id="@+id/imageview_help_exit"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
+        android:src="@drawable/x_button_display_bb86fc" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_centerInParent="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hi! I'm here to help!"
+            android:textSize="40sp"
+            android:textColor="@color/purple_200"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:text="Having trouble adding new songs?\nTry our custom song receiver!"
+            android:textSize="22.5sp"
+            android:textColor="@color/white"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:text="I know you are lazy...\nThese three songs have full data included :)"
+            android:textColor="@color/white"
+            android:textSize="17.5sp"
+            android:gravity="center"/>
+
+        <Button
+            android:id="@+id/button_help_human"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:text="Human / Rag'n'Bone Man"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/purple_500"/>
+
+        <Button
+            android:id="@+id/button_help_is_this_love"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:text="Is This Love / Bob Marley"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/purple_500"/>
+
+        <Button
+            android:id="@+id/button_help_in_the_end"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:text="In The End / Linkin Park"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/purple_500"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:text="Now try adding photos yourself!"
+            android:textColor="@color/white"
+            android:textSize="17.5dp"
+            android:gravity="center"/>
+
+
+
+        <Button
+            android:id="@+id/button_help_song_1"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:text="Song #1"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/purple_500"/>
+
+        <Button
+            android:id="@+id/button_help_song_2"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:text="Song #2"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/purple_500"/>
+
+        <Button
+            android:id="@+id/button_help_song_3"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:text="Song #3"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/purple_500"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

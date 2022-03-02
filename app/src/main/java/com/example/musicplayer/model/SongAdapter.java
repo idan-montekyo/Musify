@@ -1,5 +1,6 @@
 package com.example.musicplayer.model;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +10,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.musicplayer.R;
 
+import java.io.IOException;
 import java.util.List;
 
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder>{
@@ -20,7 +24,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
 
     // Interface for listeners.
     public interface MySongListener {
-        void onSongClicked(int index, View view);
+        void onSongClicked(int index, View view) throws IOException;
         void onSongLongClicked(int index, View view);
     }
 
@@ -49,7 +53,11 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                 @Override
                 public void onClick(View v) {
                     if (listener != null) {
-                        listener.onSongClicked(getAdapterPosition(), v);
+                        try {
+                            listener.onSongClicked(getAdapterPosition(), v);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             });
@@ -79,7 +87,8 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     @Override
     public void onBindViewHolder(@NonNull SongViewHolder holder, int position) {
         Song song = songs.get(position);
-        holder.imageIv.setImageResource(song.getSongResId());
+        Glide.with(holder.imageIv.getContext()).load(song.getSongResId()).
+                apply(RequestOptions.circleCropTransform()).into(holder.imageIv);
         holder.songTv.setText(song.getSong());
         holder.singerTv.setText(song.getSinger());
         holder.durationTv.setText(song.getDuration());

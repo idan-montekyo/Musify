@@ -33,7 +33,20 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_below="@id/textview_main_title"
+        android:layout_above="@id/button_main_add_song"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
+    <Button
+        android:id="@+id/button_main_add_song"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ADD SONG"
+        android:textSize="15sp"
+        android:backgroundTint="@color/purple_200"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"/>
 
 </RelativeLayout>

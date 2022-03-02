@@ -12,11 +12,12 @@ public class Song {
     private String uri;
 
     // Constructor.
-    public Song(int songResId, String song, String singer, String duration) {
+    public Song(int songResId, String song, String singer, String duration, String uri) {
         this.songResId = songResId;
         this.song = song;
         this.singer = singer;
         this.duration = duration;
+        this.uri = uri;
     }
 
     // Getter methods.

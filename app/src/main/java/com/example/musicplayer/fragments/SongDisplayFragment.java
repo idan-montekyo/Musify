@@ -10,10 +10,13 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.musicplayer.R;
+import com.example.musicplayer.model.MusicPlayer;
 import com.example.musicplayer.model.Song;
 
 
@@ -26,9 +29,11 @@ public class SongDisplayFragment extends Fragment {
     private static final String ARG_DURATION = "duration";
     private static final String ARG_URI = "uri";
 
-    ImageView imageIv;
-    TextView songTv;
-    TextView singerTv;
+    MusicPlayer musicPlayer = MusicPlayer.getInstance();
+
+    ImageView imageIv, exitIv;
+    TextView songTv, singerTv;
+    CheckBox playPauseCheckBox;
 
     private int mSongResId;
     private String mSong, mSinger, mDuration, mUri;
@@ -63,10 +68,7 @@ public class SongDisplayFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_song_display, container, false);
-
-
-        return rootView;
+        return inflater.inflate(R.layout.fragment_song_display, container, false);
     }
 
     @Override
@@ -81,5 +83,25 @@ public class SongDisplayFragment extends Fragment {
 
         singerTv = view.findViewById(R.id.textview_display_singer);
         singerTv.setText(mSinger);
+
+        exitIv = view.findViewById(R.id.imageview_display_exit);
+        exitIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getParentFragmentManager().popBackStack();
+            }
+        });
+
+        playPauseCheckBox = view.findViewById(R.id.imageview_display_play_pause);
+        playPauseCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (playPauseCheckBox.isChecked()) {
+                    musicPlayer.proceed();
+                } else {
+                    musicPlayer.pause();
+                }
+            }
+        });
     }
 }

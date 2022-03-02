@@ -2,7 +2,10 @@ package com.example.musicplayer.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -35,7 +38,11 @@ public class SplashActivity extends AppCompatActivity {
         new Thread() {
             @Override
             public void run() {
-                try { sleep(3500); }
+                try {
+                    MediaPlayer mp = MediaPlayer.create(SplashActivity.this, R.raw.musify);
+                    new Handler(Looper.getMainLooper()).postDelayed(mp::start, 1250);
+                    sleep(3500);
+                }
                 catch (InterruptedException e) { e.printStackTrace(); }
                 finally {
                     Intent intent = new Intent(SplashActivity.this, MainActivity.class);

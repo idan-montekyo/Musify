@@ -9,19 +9,20 @@
 
     <ImageView
         android:id="@+id/imageview_display_exit"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_margin="10dp"
-        android:src="@drawable/musify_icon_round"/>
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
+        android:src="@drawable/x_button_display_bb86fc" />
 
     <ImageView
         android:id="@+id/imageview_display_image"
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
-        android:src="@drawable/splash_bg"
-        android:scaleType="fitXY"/>
+        android:layout_marginTop="100dp" />
 
     <TextView
         android:id="@+id/textview_display_song"
@@ -55,6 +56,6 @@
         android:layout_marginTop="50dp"
         android:background="@drawable/selector_song_display_play_pause"
         android:button="@null"
-        android:checked="true"/>
+        android:checked="true" />
 
 </RelativeLayout>

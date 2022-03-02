@@ -14,14 +14,28 @@ import com.example.musicplayer.model.Song;
 
 import java.util.List;
 
+// TODO: replace with regular (custom) dialog fragment.
 public class DeleteDialogFragment extends DialogFragment {
 
+    private static final String ARG_POSITION = "position";
+
     public interface DeleteDialogListener {
-        void onPositiveButtonClicked();
+        void onPositiveButtonClicked(int position);
         void onNegativeButtonClicked();
     }
 
     DeleteDialogListener callBack;
+
+    public static DeleteDialogFragment newInstance(int position) {
+
+        DeleteDialogFragment fragment = new DeleteDialogFragment();
+        Bundle args = new Bundle();
+
+        args.putInt(ARG_POSITION, position);
+
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -39,12 +53,14 @@ public class DeleteDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        setCancelable(false);
 
         builder.setTitle("DELETE SONG").setMessage("Are you sure you want to delete this song?").
                 setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        callBack.onPositiveButtonClicked();
+                        assert getArguments() != null;
+                        callBack.onPositiveButtonClicked(getArguments().getInt(ARG_POSITION));
                     }
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override

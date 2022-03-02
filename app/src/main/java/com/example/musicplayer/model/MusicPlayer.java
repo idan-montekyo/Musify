@@ -2,13 +2,18 @@ package com.example.musicplayer.model;
 
 
 import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+
+// mp3 files saved to mailboxdrive.com. might be removed after 30 days, thus need to be re-uploaded.
+
 // TODO: make sure how to create music - save in R.raw(resid) ? from youtube(uri) [service?] ?
 public class MusicPlayer {
-
-    private final String EXAMPLE_SONG_URI = "https://www.youtube.com/watch?v=0sca9FP6zl8";
 
     private static MusicPlayer instance = null;
     private static MediaPlayer mediaPlayer = null;
@@ -29,14 +34,26 @@ public class MusicPlayer {
     // TODO: replace Object with resid / uri.
     //  remove EXAMPLE.
     // Start.
-    public void start(Context context, Object obj) {
+    public void start(Context context, String uri) throws IOException {
         if (instance != null) {
             if (mediaPlayer != null) { // Stop and release current mediaPlayer.
                 instance.stop();
             }
-            mediaPlayer = MediaPlayer.create(context, Uri.parse(EXAMPLE_SONG_URI));
-            mediaPlayer.setLooping(false);
+            mediaPlayer = new MediaPlayer();
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setVolume(100, 100);
+
+            mediaPlayer.setDataSource(uri);
+            mediaPlayer.prepareAsync();
+            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mp.seekTo(0);
+                    mediaPlayer.start();
+                    System.out.println("start");
+                    System.out.println(mediaPlayer.getDuration());
+                }
+            });
         }
     }
 
