@@ -1,6 +1,9 @@
 package com.example.musicplayer.model;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,15 +86,29 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         return songViewHolder;
     }
 
-    // Recycles card when scrolling.
+    // Loading data into cards + Recycles card when scrolling.
     @Override
     public void onBindViewHolder(@NonNull SongViewHolder holder, int position) {
         Song song = songs.get(position);
-        Glide.with(holder.imageIv.getContext()).load(song.getSongResId()).
-                apply(RequestOptions.circleCropTransform()).into(holder.imageIv);
         holder.songTv.setText(song.getSong());
         holder.singerTv.setText(song.getSinger());
         holder.durationTv.setText(song.getDuration());
+
+        // String empty = no picture was manually taken -> load songResId
+        // else = picture was taken -> load from Base64 String.
+        if (songs.get(position).getImgAsStringBase64().equals("")) {
+            Glide.with(holder.imageIv.getContext()).load(song.getSongResId()).
+                    apply(RequestOptions.circleCropTransform()).into(holder.imageIv);
+        } else {
+            // Convert Base64 String back to image representation.
+            // Decode Base64 String
+            byte[] bytes = Base64.decode(song.getImgAsStringBase64(), Base64.DEFAULT);
+            // Initialize Bitmap
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            // Set Bitmap on ImageView as a round picture.
+            Glide.with(holder.imageIv.getContext()).load(bitmap).
+                    apply(RequestOptions.circleCropTransform()).into(holder.imageIv);
+        }
     }
 
     // Returns number of songs in our list.

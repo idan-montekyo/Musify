@@ -11,8 +11,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 // mp3 files saved to mailboxdrive.com. might be removed after 30 days, thus need to be re-uploaded.
-
-// TODO: make sure how to create music - save in R.raw(resid) ? from youtube(uri) [service?] ?
 public class MusicPlayer {
 
     private static MusicPlayer instance = null;
@@ -31,12 +29,11 @@ public class MusicPlayer {
     // Check if music is playing.
     public boolean isPlaying() { return mediaPlayer.isPlaying(); }
 
-    // TODO: replace Object with resid / uri.
-    //  remove EXAMPLE.
     // Start.
     public void start(Context context, String uri) throws IOException {
         if (instance != null) {
-            if (mediaPlayer != null) { // Stop and release current mediaPlayer.
+            // Stop and release current mediaPlayer.
+            if (mediaPlayer != null) {
                 instance.stop();
             }
             mediaPlayer = new MediaPlayer();

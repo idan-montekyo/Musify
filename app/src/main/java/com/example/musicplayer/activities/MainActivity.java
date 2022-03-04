@@ -33,9 +33,8 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
         // Hide ActionBar.
         if (getSupportActionBar() != null) { getSupportActionBar().hide(); }
 
-        MainFragment mainFragment = MainFragment.newInstance();
         getSupportFragmentManager().beginTransaction().
-                add(R.id.root_main_activity, mainFragment, MAIN_FRAGMENT_TAG).commit();
+                add(R.id.root_main_activity, new MainFragment(), MAIN_FRAGMENT_TAG).commit();
     }
 
     @Override

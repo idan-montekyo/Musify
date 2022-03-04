@@ -28,6 +28,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        android:paddingBottom="30dp"
         android:orientation="vertical">
 
         <TextView
@@ -41,7 +43,7 @@
         <EditText
             android:id="@+id/edittext_add_song"
             android:layout_width="300dp"
-            android:layout_height="40dp"
+            android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/round_text_frame"
             android:gravity="center"
@@ -62,7 +64,7 @@
         <EditText
             android:id="@+id/edittext_add_singer"
             android:layout_width="300dp"
-            android:layout_height="40dp"
+            android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/round_text_frame"
             android:gravity="center"
@@ -134,7 +136,7 @@
         <EditText
             android:id="@+id/edittext_add_link"
             android:layout_width="300dp"
-            android:layout_height="60dp"
+            android:layout_height="45dp"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/round_text_frame"
             android:gravity="center"
@@ -143,32 +145,61 @@
             android:textColorHint="@color/white"
             android:textSize="15sp" />
 
-        <Button
-            android:id="@+id/button_add_picture"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
-            android:backgroundTint="@color/purple_500"
-            android:text="Take picture"
-            android:textSize="15sp" />
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button_add_take_picture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/purple_500"
+                android:text="Take picture"
+                android:textSize="15sp" />
+
+            <View
+                android:layout_width="15dp"
+                android:layout_height="match_parent" />
+
+            <Button
+                android:id="@+id/button_add_pick_picture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/purple_500"
+                android:text="Pick from gallery"
+                android:textSize="15sp" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linearlayout_photos_container"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:orientation="horizontal"
-            android:layout_marginTop="5dp">
-
-            <!--        TODO: add 2 ImageViews - one for round, one for square-->
-        </LinearLayout>
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="NEED TO ADD PICTURE"
-            android:textColor="@color/red"
-            android:textSize="30sp" />
+            android:layout_marginTop="10dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imageview_add_img_round"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/musify_icon_round" />
+
+            <View
+                android:layout_width="25dp"
+                android:layout_height="match_parent" />
+
+            <ImageView
+                android:id="@+id/imageview_add_img_square"
+                android:layout_width="175dp"
+                android:layout_height="175dp"
+                android:src="@mipmap/ic_launcher" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -178,7 +209,6 @@
         android:orientation="horizontal"
         android:layout_below="@id/linearlayout_mid_container"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
         android:layout_marginBottom="20dp">
 
         <Button

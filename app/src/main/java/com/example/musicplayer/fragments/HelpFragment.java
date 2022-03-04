@@ -6,13 +6,11 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.example.musicplayer.R;
@@ -21,41 +19,24 @@ import com.example.musicplayer.R;
 public class HelpFragment extends DialogFragment {
 
     public interface OnSongSuggestionSelected {
-        void sendSelection(int selection);
+        void songSuggestionSelected(int selection);
     }
 
     public OnSongSuggestionSelected callBack;
 
-    EditText songEt, singerEt, minutesEt, secondsEt, urlLinkEt;
-
     ImageView exitIv;
     Button humanBtn, isThisLoveBtn, inTheEndBtn, song1Btn, song2Btn, song3Btn;
-
-//    public static HelpFragment newInstance(String param1, String param2) {
-//        HelpFragment fragment = new HelpFragment();
-//        Bundle args = new Bundle();
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
-//
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
-//    }
-
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
         try {
+            // TODO: replace deprecated.
+            // Source - Communicate between fragments - https://www.youtube.com/watch?v=LUV_djRHSEY
             callBack = (OnSongSuggestionSelected)getTargetFragment();
         } catch (ClassCastException ex) {
-            throw new ClassCastException("implement...");
+            throw new ClassCastException("Fragment must implement DeleteDialogListener interface.");
         }
     }
 
@@ -70,12 +51,6 @@ public class HelpFragment extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        songEt = view.findViewById(R.id.edittext_add_song);
-        singerEt = view.findViewById(R.id.edittext_add_singer);
-        minutesEt = view.findViewById(R.id.edittext_add_minutes);
-        secondsEt = view.findViewById(R.id.edittext_add_seconds);
-        urlLinkEt = view.findViewById(R.id.edittext_add_link);
-
         exitIv = view.findViewById(R.id.imageview_help_exit);
         exitIv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,7 +63,7 @@ public class HelpFragment extends DialogFragment {
         humanBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callBack.sendSelection(1);
+                callBack.songSuggestionSelected(1);
                 getParentFragmentManager().popBackStack();
             }
         });
@@ -97,7 +72,7 @@ public class HelpFragment extends DialogFragment {
         isThisLoveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callBack.sendSelection(2);
+                callBack.songSuggestionSelected(2);
                 getParentFragmentManager().popBackStack();
             }
         });
@@ -106,7 +81,7 @@ public class HelpFragment extends DialogFragment {
         inTheEndBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callBack.sendSelection(3);
+                callBack.songSuggestionSelected(3);
                 getParentFragmentManager().popBackStack();
             }
         });
@@ -115,7 +90,7 @@ public class HelpFragment extends DialogFragment {
         song1Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callBack.sendSelection(4);
+                callBack.songSuggestionSelected(4);
                 getParentFragmentManager().popBackStack();
             }
         });
@@ -124,7 +99,7 @@ public class HelpFragment extends DialogFragment {
         song2Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callBack.sendSelection(5);
+                callBack.songSuggestionSelected(5);
                 getParentFragmentManager().popBackStack();
             }
         });
@@ -133,7 +108,7 @@ public class HelpFragment extends DialogFragment {
         song3Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callBack.sendSelection(6);
+                callBack.songSuggestionSelected(6);
                 getParentFragmentManager().popBackStack();
             }
         });

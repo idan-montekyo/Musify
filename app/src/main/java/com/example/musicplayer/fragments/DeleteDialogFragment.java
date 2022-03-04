@@ -14,7 +14,6 @@ import com.example.musicplayer.model.Song;
 
 import java.util.List;
 
-// TODO: replace with regular (custom) dialog fragment.
 public class DeleteDialogFragment extends DialogFragment {
 
     private static final String ARG_POSITION = "position";
