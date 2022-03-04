@@ -28,7 +28,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-
+// TODO:
+//  1. Fix image resolution when taking picture.
+//  2. Save all data (just 'songs' list actually) and Load when opening.
+//  3. Make sure we load the 'base songs' JUST ONCE - when the app is first opened. Can use a boolean arg to confirm.
+//  4. Replace deprecated set/getTargetFragment in AddSongFragment & HelpFragment - https://stackoverflow.com/questions/64869501/how-to-replace-settargetfragment-now-that-it-is-deprecated
+//  5. Make DeleteDialogFragment communicate directly to MainFragment instead of MainActivity.
+//  6. * Add a button that plays all songs in the order of them in the list.
+//  7. * Add foreground-service that will appear as a notification THAT CONTROLS THE PLAYER.
 public class MainFragment extends Fragment {
 
     public static List<Song> songs;
@@ -41,21 +48,6 @@ public class MainFragment extends Fragment {
 
     MusicPlayer musicPlayer;
     Button addSongBtn;
-
-    public static MainFragment newInstance() {
-        MainFragment fragment = new MainFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            int x = 0;
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,33 +68,33 @@ public class MainFragment extends Fragment {
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
 
         songs = new ArrayList<>();
-        songs.add(new Song(R.drawable.img_circles, "Circles", "Post Malone", "3:36",
+        songs.add(new Song(R.drawable.img_circles, "", "Circles", "Post Malone", "3:36",
                 "https://www.mboxdrive.com/circles.mp3"));
-        songs.add(new Song(R.drawable.img_homicide, "Homicide", "Logic (feat. Eminem)", "4:05",
+        songs.add(new Song(R.drawable.img_homicide, "", "Homicide", "Logic (feat. Eminem)", "4:05",
                 "https://www.mboxdrive.com/homicide.mp3"));
-        songs.add(new Song(R.drawable.img_isis, "ISIS", "Joyner Lucas (ft Logic)", "3:56",
+        songs.add(new Song(R.drawable.img_isis, "", "ISIS", "Joyner Lucas (ft Logic)", "3:56",
                 "https://www.mboxdrive.com/isis.mp3"));
-        songs.add(new Song(R.drawable.img_blinding_lights, "Blinding Lights", "Teddy Swims (The Weekend Cover)",
+        songs.add(new Song(R.drawable.img_blinding_lights, "", "Blinding Lights", "Teddy Swims (The Weekend Cover)",
                 "3:35", "https://www.mboxdrive.com/blinding_lights.mp3"));
-        songs.add(new Song(R.drawable.img_alien, "Alien", "Dennis Lloyd", "2:17",
+        songs.add(new Song(R.drawable.img_alien, "", "Alien", "Dennis Lloyd", "2:17",
                 "https://www.mboxdrive.com/alien.mp3"));
-        songs.add(new Song(R.drawable.img_if_you_want_love, "If You Want Love", "NF", "3:19",
+        songs.add(new Song(R.drawable.img_if_you_want_love, "", "If You Want Love", "NF", "3:19",
                 "https://www.mboxdrive.com/if_you_want_love.mp3"));
-        songs.add(new Song(R.drawable.img_only, "Only", "NF, Sasha Sloan", "3:46",
+        songs.add(new Song(R.drawable.img_only, "", "Only", "NF, Sasha Sloan", "3:46",
                 "https://www.mboxdrive.com/only.mp3"));
-        songs.add(new Song(R.drawable.img_takin_shots, "Takin' Shots", "Post Malone", "3:36",
+        songs.add(new Song(R.drawable.img_takin_shots, "", "Takin' Shots", "Post Malone", "3:36",
                 "https://www.mboxdrive.com/takin_shots.mp3"));
-        songs.add(new Song(R.drawable.img_psycho, "Psycho (Pt.2)", "Russ", "2:42",
+        songs.add(new Song(R.drawable.img_psycho, "", "Psycho (Pt.2)", "Russ", "2:42",
                 "https://www.mboxdrive.com/psycho.mp3"));
-        songs.add(new Song(R.drawable.img_london, "לונדון", "אייל גולן", "3:14",
+        songs.add(new Song(R.drawable.img_london, "", "לונדון", "אייל גולן", "3:14",
                 "https://www.mboxdrive.com/london.mp3"));
-        songs.add(new Song(R.drawable.img_taruzi_elav, "תרוצי אליו", "דולי ופן (עם רותם כהן ובית הבובות)",
+        songs.add(new Song(R.drawable.img_taruzi_elav, "", "תרוצי אליו", "דולי ופן (עם רותם כהן ובית הבובות)",
                 "3:27", "https://www.mboxdrive.com/taruzi_elav.mp3"));
-        songs.add(new Song(R.drawable.img_medabrim_al_ahava, "מדברים על אהבה", "טל ורסנו", "2:59",
+        songs.add(new Song(R.drawable.img_medabrim_al_ahava, "", "מדברים על אהבה", "טל ורסנו", "2:59",
                 "https://www.mboxdrive.com/medabrim_al_ahava.mp3"));
-        songs.add(new Song(R.drawable.img_resisim, "רסיסים (קאבר)", "נאור כהן", "3:18",
+        songs.add(new Song(R.drawable.img_resisim, "", "רסיסים (קאבר)", "נאור כהן", "3:18",
                 "https://www.mboxdrive.com/resisim.mp3"));
-        songs.add(new Song(R.drawable.img_tslil_meitar, "צליל מיתר", "אייל גולן", "4:20",
+        songs.add(new Song(R.drawable.img_tslil_meitar, "", "צליל מיתר", "אייל גולן", "4:20",
                 "https://www.mboxdrive.com/tslil_meitar.mp3"));
 
         songAdapter = new SongAdapter(songs);
@@ -143,7 +135,7 @@ public class MainFragment extends Fragment {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-//                // TODO: dialog not communicating through MainFragment.
+//                // TODO: dialog not communicating through MainFragment - do like in HelpFrag in AddSongFrag.
                 DeleteDialogFragment myDialogFragment = DeleteDialogFragment.newInstance(viewHolder.getAdapterPosition());
                 myDialogFragment.show(getParentFragmentManager(), DELETE_DIALOG_FRAGMENT_TAG);
 
