@@ -1,11 +1,17 @@
 package com.example.musicplayer.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResult;
@@ -14,10 +20,14 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+import androidx.exifinterface.media.ExifInterface;
 import androidx.fragment.app.Fragment;
 
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -32,11 +42,12 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.musicplayer.R;
-import com.example.musicplayer.activities.MainActivity;
 import com.example.musicplayer.model.Song;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Objects;
 
 
@@ -56,6 +67,8 @@ public class AddSongFragment extends Fragment implements HelpFragment.OnSongSugg
     private int drawable = R.drawable.musify_icon_round;
     private Song newSong;
     private String song, singer, minutes, seconds, urlLink, duration, imgAsString = "";
+
+    private String currentPhotoPath;
 
     public interface AddSongListener {
         void onAddButtonClicked(Song song);
@@ -81,14 +94,33 @@ public class AddSongFragment extends Fragment implements HelpFragment.OnSongSugg
                 new ActivityResultCallback<ActivityResult>() {
                     @Override
                     public void onActivityResult(ActivityResult result) {
-                        // Initialize result data.
-                        Intent intent = result.getData();
-                        // Check condition. Right condition in case camera opened and closed.
-                        if (intent != null && intent.getExtras() != null) {
-                            // Get Bitmap data / Initialize Bitmap
-                            Bitmap bitmap = (Bitmap) intent.getExtras().get("data");
 
-                            imgAsString = LoadImageAndConvertFromBitmapToBase64(bitmap);
+                        // Check condition. In case camera opened and closed.
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+
+                            File imgFile = new File(currentPhotoPath);
+                            if (imgFile.exists()) {
+                                // Get Bitmap data / Initialize Bitmap
+                                Bitmap bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+
+                                // Source - Solve image rotation problem - https://stackoverflow.com/questions/3647993/android-bitmaps-loaded-from-gallery-are-rotated-in-imageview
+                                try {
+                                    ExifInterface exif = new ExifInterface(imgFile.getAbsolutePath());
+                                    int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
+                                    Matrix matrix = new Matrix();
+                                    if (orientation == 6) {
+                                        matrix.postRotate(90);
+                                    } else if (orientation == 3) {
+                                        matrix.postRotate(180);
+                                    } else if (orientation == 8) {
+                                        matrix.postRotate(270);
+                                    }
+                                    bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true); // rotating bitmap
+                                } catch (Exception ignored) {
+                                }
+
+                                imgAsString = LoadImageAndConvertFromBitmapToBase64(bitmap);
+                            }
                         }
                     }
                 }
@@ -158,13 +190,36 @@ public class AddSongFragment extends Fragment implements HelpFragment.OnSongSugg
                     new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, 100);
         }
 
+        // Source - Take photos - Save the full-size photo - https://developer.android.com/training/camera/photobasics
         takePictureBtn = view.findViewById(R.id.button_add_take_picture);
         takePictureBtn.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @SuppressLint("QueryPermissionsNeeded")
             @Override
             public void onClick(View v) {
                 // Open camera
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                takePictureActivityResultLauncher.launch(intent);
+
+                // Ensure that there's a camera activity to handle the intent
+                if (intent.resolveActivity(Objects.requireNonNull(getActivity()).getPackageManager()) != null) {
+                    // Create the File where the photo should go
+                    File photoFile = null;
+                    try {
+                        photoFile = createImageFile();
+                    } catch (IOException ex) {
+                        // Error occurred while creating the File
+                    }
+                    // Continue only if the File was successfully created
+                    if (photoFile != null) {
+                        Uri photoURI = FileProvider.getUriForFile(Objects.requireNonNull(getContext()),
+                                "com.example.android.fileprovider",
+                                photoFile);
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                        takePictureActivityResultLauncher.launch(intent);
+                    }
+                }
+
+//                takePictureActivityResultLauncher.launch(intent);
             }
         });
 
@@ -303,6 +358,25 @@ public class AddSongFragment extends Fragment implements HelpFragment.OnSongSugg
         byte[] bytes = stream.toByteArray();
         // Get Base64 encoded string
         return Base64.encodeToString(bytes, Base64.DEFAULT);
+    }
+
+    // Source - https://developer.android.com/training/camera/photobasics
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        @SuppressLint("SimpleDateFormat")
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Objects.requireNonNull(getActivity()).getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
     }
 
 }

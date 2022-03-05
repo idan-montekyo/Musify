@@ -29,13 +29,13 @@ import java.util.List;
 import java.util.Objects;
 
 // TODO:
-//  1. Fix image resolution when taking picture.
-//  2. Save all data (just 'songs' list actually) and Load when opening.
-//  3. Make sure we load the 'base songs' JUST ONCE - when the app is first opened. Can use a boolean arg to confirm.
-//  4. Replace deprecated set/getTargetFragment in AddSongFragment & HelpFragment - https://stackoverflow.com/questions/64869501/how-to-replace-settargetfragment-now-that-it-is-deprecated
-//  5. Make DeleteDialogFragment communicate directly to MainFragment instead of MainActivity.
-//  6. * Add a button that plays all songs in the order of them in the list.
-//  7. * Add foreground-service that will appear as a notification THAT CONTROLS THE PLAYER.
+//  1. Save all data (just 'songs' list actually) and Load when opening.
+//  2. Make sure we load the 'base songs' JUST ONCE - when the app is first opened. Can use a boolean arg to confirm.
+//  3. Replace deprecated set/getTargetFragment in AddSongFragment & HelpFragment - https://stackoverflow.com/questions/64869501/how-to-replace-settargetfragment-now-that-it-is-deprecated
+//  4. Make DeleteDialogFragment communicate directly to MainFragment instead of MainActivity.
+//  5. * Add a button that plays all songs in the order of them in the list.
+//  6. * Add foreground-service that will appear as a notification THAT CONTROLS THE PLAYER.
+//  7. *** BUG - when DisplayFrag shows self-taken image - app crashes when exiting to home screen.
 public class MainFragment extends Fragment {
 
     public static List<Song> songs;
