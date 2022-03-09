@@ -1,25 +1,19 @@
 package com.example.musicplayer.fragments;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.example.musicplayer.R;
 import com.example.musicplayer.model.MusicPlayer;
 import com.example.musicplayer.model.Song;
@@ -28,11 +22,11 @@ import com.example.musicplayer.model.Song;
 public class SongDisplayFragment extends Fragment {
 
     private static final String ARG_SONG_RES_ID = "song_res_id";
-    private static final String ARG_IMG_AS_STRING_BASE64 = "img_as_string_base64";
+    private static final String ARG_IMG_URI = "img_uri";
     private static final String ARG_SONG = "song";
     private static final String ARG_SINGER = "singer";
     private static final String ARG_DURATION = "duration";
-    private static final String ARG_URI = "uri";
+    private static final String ARG_SONG_URI = "uri";
 
     MusicPlayer musicPlayer = MusicPlayer.getInstance();
 
@@ -41,7 +35,7 @@ public class SongDisplayFragment extends Fragment {
     CheckBox playPauseCheckBox;
 
     private int mSongResId;
-    private String mImgAsStringBase64 ,mSong, mSinger, mDuration, mUri;
+    private String mImgUri,mSong, mSinger, mDuration, mSongUri;
 
     public static SongDisplayFragment newInstance(Song song) {
 
@@ -49,11 +43,11 @@ public class SongDisplayFragment extends Fragment {
         Bundle args = new Bundle();
 
         args.putInt(ARG_SONG_RES_ID, song.getSongResId());
-        args.putString(ARG_IMG_AS_STRING_BASE64, song.getImgAsStringBase64());
+        args.putString(ARG_IMG_URI, song.getImgUri());
         args.putString(ARG_SONG, song.getSong());
         args.putString(ARG_SINGER, song.getSinger());
         args.putString(ARG_DURATION, song.getDuration());
-        args.putString(ARG_URI, song.getUri());
+        args.putString(ARG_SONG_URI, song.getSongUri());
 
         fragment.setArguments(args);
         return fragment;
@@ -64,11 +58,11 @@ public class SongDisplayFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mSongResId = getArguments().getInt(ARG_SONG_RES_ID);
-            mImgAsStringBase64 = getArguments().getString(ARG_IMG_AS_STRING_BASE64);
+            mImgUri = getArguments().getString(ARG_IMG_URI);
             mSong = getArguments().getString(ARG_SONG);
             mSinger = getArguments().getString(ARG_SINGER);
             mDuration = getArguments().getString(ARG_DURATION);
-            mUri = getArguments().getString(ARG_URI);
+            mSongUri = getArguments().getString(ARG_SONG_URI);
         }
     }
 
@@ -84,18 +78,12 @@ public class SongDisplayFragment extends Fragment {
 
         imageIv = view.findViewById(R.id.imageview_display_image);
 
-        // String empty = no picture was manually taken -> load songResId
-        // else = picture was taken -> load from Base64 String.
-        if (mImgAsStringBase64.equals("")) {
+        // String empty = no picture was manually taken -> load songResId.
+        // else = picture was taken -> load img-Uri.
+        if (mImgUri.equals("")) {
             imageIv.setImageResource(mSongResId);
         } else {
-            // Convert Base64 String back to image representation.
-            // Decode Base64 String
-            byte[] bytes = Base64.decode(mImgAsStringBase64, Base64.DEFAULT);
-            // Initialize Bitmap
-            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            // Set Bitmap on ImageView as a round picture.
-            Glide.with(this).load(bitmap).into(imageIv);
+            Glide.with(this).load(mImgUri).into(imageIv);
         }
 
         songTv = view.findViewById(R.id.textview_display_song);

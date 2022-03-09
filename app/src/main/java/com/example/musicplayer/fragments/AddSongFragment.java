@@ -6,9 +6,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Build;
@@ -24,19 +21,16 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
-import androidx.exifinterface.media.ExifInterface;
 import androidx.fragment.app.Fragment;
 
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -44,7 +38,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.musicplayer.R;
 import com.example.musicplayer.model.Song;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
@@ -60,13 +53,13 @@ public class AddSongFragment extends Fragment implements HelpFragment.OnSongSugg
     final String ADD_SONG_FRAGMENT_TAG = "add_song_fragment";
     final String HELP_FRAGMENT_TAG = "help_fragment";
 
-    EditText songEt, singerEt, minutesEt, secondsEt, urlLinkEt;
+    EditText songEt, singerEt, minutesEt, secondsEt, songUriLinkEt;
     Button takePictureBtn, pickFromGalleryBtn, addSongBtn, needHelpBtn;
     ImageView roundImgIv, squareImgIv, exitIv;
 
     private int drawable = R.drawable.musify_icon_round;
     private Song newSong;
-    private String song, singer, minutes, seconds, urlLink, duration, imgAsString = "";
+    private String song, singer, minutes, seconds, songUriLink, duration, imgUri = "";
 
     private String currentPhotoPath;
 
@@ -87,64 +80,34 @@ public class AddSongFragment extends Fragment implements HelpFragment.OnSongSugg
         }
 
         // Source - Capture image with camera - https://www.youtube.com/watch?v=RaOyw84625w
-        // Source - Encode & Decode image in Base64 - https://www.youtube.com/watch?v=R_OSC0-nSIg
-        // After taking a picture - load into both ImageViews, and save Base64 String to imgAsString.
+        // After taking a picture - load into both ImageViews, and save URI to imgUri.
         takePictureActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
                     @Override
                     public void onActivityResult(ActivityResult result) {
-
                         // Check condition. In case camera opened and closed.
                         if (result.getResultCode() == Activity.RESULT_OK) {
-
-                            File imgFile = new File(currentPhotoPath);
-                            if (imgFile.exists()) {
-                                // Get Bitmap data / Initialize Bitmap
-                                Bitmap bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-
-                                // Source - Solve image rotation problem - https://stackoverflow.com/questions/3647993/android-bitmaps-loaded-from-gallery-are-rotated-in-imageview
-                                try {
-                                    ExifInterface exif = new ExifInterface(imgFile.getAbsolutePath());
-                                    int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
-                                    Matrix matrix = new Matrix();
-                                    if (orientation == 6) {
-                                        matrix.postRotate(90);
-                                    } else if (orientation == 3) {
-                                        matrix.postRotate(180);
-                                    } else if (orientation == 8) {
-                                        matrix.postRotate(270);
-                                    }
-                                    bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true); // rotating bitmap
-                                } catch (Exception ignored) {
-                                }
-
-                                imgAsString = LoadImageAndConvertFromBitmapToBase64(bitmap);
-                            }
+                            Glide.with(Objects.requireNonNull(getContext())).
+                                    load(currentPhotoPath).circleCrop().into(roundImgIv);
+                            Glide.with(getContext()).load(currentPhotoPath).into(squareImgIv);
+                            imgUri = currentPhotoPath;
                         }
                     }
                 }
         );
 
         // Source - Open file manager and pick photo (get Uri) - https://www.youtube.com/watch?v=cXyeozbLqq0
-        // After picking from gallery - Converts Uri to Base64 String
+        // After picking from gallery - Load into both ImageViews, and save URI as String to imgUri.
         pickFromGalleryActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.GetContent(),
                 new ActivityResultCallback<Uri>() {
                     @Override
                     public void onActivityResult(Uri result) {
-                        try {
-                            // Initialize Bitmap.
-                            if (result != null) {
-                                Bitmap bitmap = MediaStore.Images.Media.
-                                        getBitmap(Objects.requireNonNull(getActivity()).getContentResolver(), result);
-
-                                imgAsString = LoadImageAndConvertFromBitmapToBase64(bitmap);
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
+                        Glide.with(Objects.requireNonNull(getContext())).
+                                load(result).circleCrop().into(roundImgIv);
+                        Glide.with(getContext()).load(result).into(squareImgIv);
+                        imgUri = result.toString();
                     }
                 }
         );
@@ -165,7 +128,7 @@ public class AddSongFragment extends Fragment implements HelpFragment.OnSongSugg
         singerEt = view.findViewById(R.id.edittext_add_singer);
         minutesEt = view.findViewById(R.id.edittext_add_minutes);
         secondsEt = view.findViewById(R.id.edittext_add_seconds);
-        urlLinkEt = view.findViewById(R.id.edittext_add_link);
+        songUriLinkEt = view.findViewById(R.id.edittext_add_link);
         roundImgIv = view.findViewById(R.id.imageview_add_img_round);
         squareImgIv = view.findViewById(R.id.imageview_add_img_square);
 
@@ -206,9 +169,8 @@ public class AddSongFragment extends Fragment implements HelpFragment.OnSongSugg
                     File photoFile = null;
                     try {
                         photoFile = createImageFile();
-                    } catch (IOException ex) {
-                        // Error occurred while creating the File
-                    }
+                    } catch (IOException ignored) {} // Error occurred while creating the File
+
                     // Continue only if the File was successfully created
                     if (photoFile != null) {
                         Uri photoURI = FileProvider.getUriForFile(Objects.requireNonNull(getContext()),
@@ -218,8 +180,6 @@ public class AddSongFragment extends Fragment implements HelpFragment.OnSongSugg
                         takePictureActivityResultLauncher.launch(intent);
                     }
                 }
-
-//                takePictureActivityResultLauncher.launch(intent);
             }
         });
 
@@ -240,7 +200,7 @@ public class AddSongFragment extends Fragment implements HelpFragment.OnSongSugg
                 singer = singerEt.getText().toString();
                 minutes = minutesEt.getText().toString();
                 seconds = secondsEt.getText().toString();
-                urlLink = urlLinkEt.getText().toString();
+                songUriLink = songUriLinkEt.getText().toString();
 
                 if (song.equals("")) {
                     Toast.makeText(getContext(), "Please fill in song name", Toast.LENGTH_SHORT).show();
@@ -250,7 +210,7 @@ public class AddSongFragment extends Fragment implements HelpFragment.OnSongSugg
                     Toast.makeText(getContext(), "Please fill in duration", Toast.LENGTH_SHORT).show();
                 } else if (Integer.parseInt(seconds) > 59) {
                     Toast.makeText(getContext(), "Seconds field may be 0-59", Toast.LENGTH_SHORT).show();
-                } else if (urlLink.equals("")) {
+                } else if (songUriLink.equals("")) {
                     Toast.makeText(getContext(), "Please add Url Link to a song from YouTube", Toast.LENGTH_SHORT).show();
                 } else {
                     if (Integer.parseInt(seconds) >= 10) {
@@ -258,7 +218,7 @@ public class AddSongFragment extends Fragment implements HelpFragment.OnSongSugg
                     } else {
                         duration = minutes + ":0" + seconds;
                     }
-                    newSong = new Song(drawable, imgAsString, song, singer, duration, urlLink);
+                    newSong = new Song(drawable, imgUri, song, singer, duration, songUriLink);
                     getParentFragmentManager().popBackStack();
                     callBack.onAddButtonClicked(newSong);
                 }
@@ -291,7 +251,7 @@ public class AddSongFragment extends Fragment implements HelpFragment.OnSongSugg
                 singerEt.setText("Rag'n'Bone Man");
                 minutesEt.setText("3");
                 secondsEt.setText("17");
-                urlLinkEt.setText("https://www.mboxdrive.com/human.mp3");
+                songUriLinkEt.setText("https://www.mboxdrive.com/human.mp3");
                 drawable = R.drawable.img_human;
                 squareImgIv.setImageResource(R.drawable.img_human);
                 Glide.with(this).load(R.drawable.img_human).
@@ -303,7 +263,7 @@ public class AddSongFragment extends Fragment implements HelpFragment.OnSongSugg
                 singerEt.setText("Bob Marley");
                 minutesEt.setText("3");
                 secondsEt.setText("51");
-                urlLinkEt.setText("https://www.mboxdrive.com/is_this_love.mp3");
+                songUriLinkEt.setText("https://www.mboxdrive.com/is_this_love.mp3");
                 drawable = R.drawable.img_is_this_love;
                 squareImgIv.setImageResource(R.drawable.img_is_this_love);
                 Glide.with(this).load(R.drawable.img_is_this_love).
@@ -314,7 +274,7 @@ public class AddSongFragment extends Fragment implements HelpFragment.OnSongSugg
                 singerEt.setText("Linkin Park");
                 minutesEt.setText("3");
                 secondsEt.setText("38");
-                urlLinkEt.setText("https://www.mboxdrive.com/in_the_end_.mp3");
+                songUriLinkEt.setText("https://www.mboxdrive.com/in_the_end_.mp3");
                 drawable = R.drawable.img_in_the_end;
                 squareImgIv.setImageResource(R.drawable.img_in_the_end);
                 Glide.with(this).load(R.drawable.img_in_the_end).
@@ -325,39 +285,23 @@ public class AddSongFragment extends Fragment implements HelpFragment.OnSongSugg
                 singerEt.setText("Unknown");
                 minutesEt.setText("3");
                 secondsEt.setText("47");
-                urlLinkEt.setText("https://www.syntax.org.il/xtra/bob.m4a");
+                songUriLinkEt.setText("https://www.syntax.org.il/xtra/bob.m4a");
                 break;
             case 5:
                 songEt.setText("Song #2");
                 singerEt.setText("UnknownUnknown");
                 minutesEt.setText("5");
                 secondsEt.setText("31");
-                urlLinkEt.setText("https://www.syntax.org.il/xtra/bob1.m4a");
+                songUriLinkEt.setText("https://www.syntax.org.il/xtra/bob1.m4a");
                 break;
             case 6:
                 songEt.setText("Song #3");
                 singerEt.setText("Unknown");
                 minutesEt.setText("3");
                 secondsEt.setText("6");
-                urlLinkEt.setText("https://www.syntax.org.il/xtra/bob2.mp3");
+                songUriLinkEt.setText("https://www.syntax.org.il/xtra/bob2.mp3");
                 break;
         }
-    }
-
-    private String LoadImageAndConvertFromBitmapToBase64(Bitmap bitmap) {
-        // Set images to ImageViews in AddSongFragment XML.
-        Glide.with(Objects.requireNonNull(getContext())).load(bitmap).
-                apply(RequestOptions.circleCropTransform()).into(roundImgIv);
-        Glide.with(getContext()).load(bitmap).into(squareImgIv);
-
-        // Initialize byte stream
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        // Compress Bitmap
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        // Initialize byte array
-        byte[] bytes = stream.toByteArray();
-        // Get Base64 encoded string
-        return Base64.encodeToString(bytes, Base64.DEFAULT);
     }
 
     // Source - https://developer.android.com/training/camera/photobasics

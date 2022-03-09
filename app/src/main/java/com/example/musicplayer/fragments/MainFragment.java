@@ -14,10 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.example.musicplayer.R;
-import com.example.musicplayer.activities.MainActivity;
 import com.example.musicplayer.model.MusicPlayer;
 import com.example.musicplayer.model.Song;
 import com.example.musicplayer.model.SongAdapter;
@@ -26,7 +24,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 // TODO:
 //  1. Save all data (just 'songs' list actually) and Load when opening.
@@ -35,7 +32,6 @@ import java.util.Objects;
 //  4. Make DeleteDialogFragment communicate directly to MainFragment instead of MainActivity.
 //  5. * Add a button that plays all songs in the order of them in the list.
 //  6. * Add foreground-service that will appear as a notification THAT CONTROLS THE PLAYER.
-//  7. *** BUG - when DisplayFrag shows self-taken image - app crashes when exiting to home screen.
 public class MainFragment extends Fragment {
 
     public static List<Song> songs;
@@ -109,7 +105,7 @@ public class MainFragment extends Fragment {
                         add(R.id.root_main_activity, songDisplayFragment, SONG_DISPLAY_FRAGMENT_TAG).
                         addToBackStack(null).commit();
 
-                musicPlayer.start(getContext(), songs.get(index).getUri());
+                musicPlayer.start(getContext(), songs.get(index).getSongUri());
             }
 
             @Override
