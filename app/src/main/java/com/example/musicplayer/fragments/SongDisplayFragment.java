@@ -1,5 +1,6 @@
 package com.example.musicplayer.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,8 +16,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.musicplayer.R;
-import com.example.musicplayer.model.MusicPlayer;
 import com.example.musicplayer.model.Song;
+import com.example.musicplayer.services.MusicPlayerService;
+
+import java.util.Objects;
 
 
 public class SongDisplayFragment extends Fragment {
@@ -27,8 +30,6 @@ public class SongDisplayFragment extends Fragment {
     private static final String ARG_SINGER = "singer";
     private static final String ARG_DURATION = "duration";
     private static final String ARG_SONG_URI = "uri";
-
-    MusicPlayer musicPlayer = MusicPlayer.getInstance();
 
     ImageView imageIv, exitIv;
     TextView songTv, singerTv;
@@ -95,20 +96,16 @@ public class SongDisplayFragment extends Fragment {
         exitIv = view.findViewById(R.id.imageview_display_exit);
         exitIv.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                getParentFragmentManager().popBackStack();
-            }
+            public void onClick(View v) { getParentFragmentManager().popBackStack(); }
         });
 
         playPauseCheckBox = view.findViewById(R.id.imageview_display_play_pause);
         playPauseCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (playPauseCheckBox.isChecked()) {
-                    musicPlayer.proceed();
-                } else {
-                    musicPlayer.pause();
-                }
+                Intent playPauseIntent = new Intent(getContext(), MusicPlayerService.class);
+                playPauseIntent.putExtra(MusicPlayerService.CASE_TAG, MusicPlayerService.PLAY_PAUSE_TAG);
+                Objects.requireNonNull(getActivity()).startService(playPauseIntent);
             }
         });
     }

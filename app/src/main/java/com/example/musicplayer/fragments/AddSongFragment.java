@@ -104,10 +104,12 @@ public class AddSongFragment extends Fragment implements HelpFragment.OnSongSugg
                 new ActivityResultCallback<Uri>() {
                     @Override
                     public void onActivityResult(Uri result) {
-                        Glide.with(Objects.requireNonNull(getContext())).
-                                load(result).circleCrop().into(roundImgIv);
-                        Glide.with(getContext()).load(result).into(squareImgIv);
-                        imgUri = result.toString();
+                        if (result != null) {
+                            Glide.with(Objects.requireNonNull(getContext())).
+                                    load(result).circleCrop().into(roundImgIv);
+                            Glide.with(getContext()).load(result).into(squareImgIv);
+                            imgUri = result.toString();
+                        }
                     }
                 }
         );

@@ -1,6 +1,9 @@
 package com.example.musicplayer.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,25 +19,23 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.musicplayer.R;
-import com.example.musicplayer.model.MusicPlayer;
+import com.example.musicplayer.controller.FileHandler;
 import com.example.musicplayer.model.Song;
 import com.example.musicplayer.model.SongAdapter;
+import com.example.musicplayer.services.MusicPlayerService;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.Objects;
 
 // TODO:
-//  1. Save all data (just 'songs' list actually) and Load when opening.
-//  2. Make sure we load the 'base songs' JUST ONCE - when the app is first opened. Can use a boolean arg to confirm.
-//  3. Replace deprecated set/getTargetFragment in AddSongFragment & HelpFragment - https://stackoverflow.com/questions/64869501/how-to-replace-settargetfragment-now-that-it-is-deprecated
-//  4. Make DeleteDialogFragment communicate directly to MainFragment instead of MainActivity.
-//  5. * Add a button that plays all songs in the order of them in the list.
-//  6. * Add foreground-service that will appear as a notification THAT CONTROLS THE PLAYER.
+//  1. Convert all local strings to string-resource, that can be translated to Hebrew also.
+//  2. Replace deprecated set/getTargetFragment in AddSongFragment & HelpFragment - https://stackoverflow.com/questions/64869501/how-to-replace-settargetfragment-now-that-it-is-deprecated
+//  3. Make DeleteDialogFragment communicate directly to MainFragment instead of MainActivity.
 public class MainFragment extends Fragment {
 
-    public static List<Song> songs;
+    public static ArrayList<Song> songs;
     public static SongAdapter songAdapter;
 
     final String MAIN_FRAGMENT_TAG = "main_fragment";
@@ -42,8 +43,10 @@ public class MainFragment extends Fragment {
     final String ADD_SONG_FRAGMENT_TAG = "add_song_fragment";
     final String DELETE_DIALOG_FRAGMENT_TAG = "delete_dialog_fragment";
 
-    MusicPlayer musicPlayer;
-    Button addSongBtn;
+    SharedPreferences sharedPreferences;
+
+    MusicPlayerService musicPlayerService;
+    Button playAllBtn, addSongBtn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,13 +60,113 @@ public class MainFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        musicPlayer = MusicPlayer.getInstance();
+        sharedPreferences = Objects.requireNonNull(getContext()).
+                getSharedPreferences(FileHandler.getSpTag(), Context.MODE_PRIVATE);
+
+        musicPlayerService = new MusicPlayerService();
 
         RecyclerView recyclerView = requireActivity().findViewById(R.id.recycler);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
 
-        songs = new ArrayList<>();
+        songs = FileHandler.getSongArrayList(Objects.requireNonNull(getContext()));
+        // Source - Check if the app is being launched for the first time - https://stackoverflow.com/questions/4636141/determine-if-android-app-is-being-used-for-the-first-time
+        if (sharedPreferences.getBoolean("is_first_run", true)) {
+            addInitialSongs();
+            FileHandler.SaveSongArrayList(getContext(), songs);
+            sharedPreferences.edit().putBoolean("is_first_run", false).commit();
+        }
+
+        songAdapter = new SongAdapter(songs);
+
+        songAdapter.setListener(new SongAdapter.MySongListener() {
+            @Override
+            public void onSongClicked(int index, View view) throws IOException {
+
+                SongDisplayFragment songDisplayFragment = SongDisplayFragment.newInstance(songs.get(index));
+                getParentFragmentManager().beginTransaction().
+                        hide(getParentFragmentManager().findFragmentByTag(MAIN_FRAGMENT_TAG)).
+                        add(R.id.root_main_activity, songDisplayFragment, SONG_DISPLAY_FRAGMENT_TAG).
+                        addToBackStack(null).commit();
+
+                // Launch MusicPlayerService.
+                Intent musicPlayerServiceIntent = new Intent(getContext(), MusicPlayerService.class);
+                musicPlayerServiceIntent.putExtra(MusicPlayerService.INDEX_TAG, index);
+                musicPlayerServiceIntent.putExtra(MusicPlayerService.CASE_TAG, MusicPlayerService.LAUNCH_TAG);
+                Objects.requireNonNull(getActivity()).startService(musicPlayerServiceIntent);
+            }
+
+            @Override
+            public void onSongLongClicked(int index, View view) {
+                // Might delete method.
+            }
+        });
+
+        ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.UP|ItemTouchHelper.DOWN,
+                ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT) {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                int fromPosition = viewHolder.getAdapterPosition();
+                int toPosition = target.getAdapterPosition();
+
+                Collections.swap(songs, fromPosition, toPosition);
+                recyclerView.getAdapter().notifyItemMoved(fromPosition, toPosition);
+                FileHandler.SaveSongArrayList(Objects.requireNonNull(getContext()), songs);
+
+                return true;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+//                // TODO: dialog not communicating through MainFragment - do like in HelpFrag in AddSongFrag.
+                DeleteDialogFragment myDialogFragment = DeleteDialogFragment.newInstance(viewHolder.getAdapterPosition());
+                myDialogFragment.show(getParentFragmentManager(), DELETE_DIALOG_FRAGMENT_TAG);
+
+                // moved to main activity
+//                String songName = songs.get(viewHolder.getAdapterPosition()).getSong();
+//                Toast.makeText(getContext(), "Removed " + songName, Toast.LENGTH_SHORT).show();
+//                songs.remove(viewHolder.getAdapterPosition());
+//                songAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+
+//                // in case nothing was deleted
+//                songAdapter.notifyDataSetChanged();
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
+        recyclerView.setAdapter(songAdapter);
+
+        playAllBtn = view.findViewById(R.id.button_play_all);
+        playAllBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Launch MusicPlayerService.
+                Intent musicPlayerServiceIntent = new Intent(getContext(), MusicPlayerService.class);
+                musicPlayerServiceIntent.putExtra(MusicPlayerService.INDEX_TAG, 0);
+                musicPlayerServiceIntent.putExtra(MusicPlayerService.CASE_TAG, MusicPlayerService.LAUNCH_TAG);
+                Objects.requireNonNull(getActivity()).startService(musicPlayerServiceIntent);
+            }
+        });
+
+        addSongBtn = view.findViewById(R.id.button_main_add_song);
+        addSongBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getParentFragmentManager().beginTransaction().
+                        hide(getParentFragmentManager().findFragmentByTag(MAIN_FRAGMENT_TAG)).
+                        add(R.id.root_main_activity, new AddSongFragment(), ADD_SONG_FRAGMENT_TAG).
+                        addToBackStack(null).commit();
+            }
+        });
+
+
+    }
+
+    private void addInitialSongs() {
         songs.add(new Song(R.drawable.img_circles, "", "Circles", "Post Malone", "3:36",
                 "https://www.mboxdrive.com/circles.mp3"));
         songs.add(new Song(R.drawable.img_homicide, "", "Homicide", "Logic (feat. Eminem)", "4:05",
@@ -92,76 +195,5 @@ public class MainFragment extends Fragment {
                 "https://www.mboxdrive.com/resisim.mp3"));
         songs.add(new Song(R.drawable.img_tslil_meitar, "", "צליל מיתר", "אייל גולן", "4:20",
                 "https://www.mboxdrive.com/tslil_meitar.mp3"));
-
-        songAdapter = new SongAdapter(songs);
-
-        songAdapter.setListener(new SongAdapter.MySongListener() {
-            @Override
-            public void onSongClicked(int index, View view) throws IOException {
-
-                SongDisplayFragment songDisplayFragment = SongDisplayFragment.newInstance(songs.get(index));
-                getParentFragmentManager().beginTransaction().
-                        hide(getParentFragmentManager().findFragmentByTag(MAIN_FRAGMENT_TAG)).
-                        add(R.id.root_main_activity, songDisplayFragment, SONG_DISPLAY_FRAGMENT_TAG).
-                        addToBackStack(null).commit();
-
-                musicPlayer.start(getContext(), songs.get(index).getSongUri());
-            }
-
-            @Override
-            public void onSongLongClicked(int index, View view) {
-                // Might delete method.
-            }
-        });
-
-        ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(
-                ItemTouchHelper.UP|ItemTouchHelper.DOWN,
-                ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT) {
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                int fromPosition = viewHolder.getAdapterPosition();
-                int toPosition = target.getAdapterPosition();
-
-                Collections.swap(songs, fromPosition, toPosition);
-                recyclerView.getAdapter().notifyItemMoved(fromPosition, toPosition);
-
-                return true;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-//                // TODO: dialog not communicating through MainFragment - do like in HelpFrag in AddSongFrag.
-                DeleteDialogFragment myDialogFragment = DeleteDialogFragment.newInstance(viewHolder.getAdapterPosition());
-                myDialogFragment.show(getParentFragmentManager(), DELETE_DIALOG_FRAGMENT_TAG);
-
-                // moved to main activity
-//                String songName = songs.get(viewHolder.getAdapterPosition()).getSong();
-//                Toast.makeText(getContext(), "Removed " + songName, Toast.LENGTH_SHORT).show();
-//                songs.remove(viewHolder.getAdapterPosition());
-//                songAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
-
-//                // in case nothing was deleted
-//                songAdapter.notifyDataSetChanged();
-            }
-        };
-
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
-
-        recyclerView.setAdapter(songAdapter);
-
-        addSongBtn = view.findViewById(R.id.button_main_add_song);
-        addSongBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getParentFragmentManager().beginTransaction().
-                        hide(getParentFragmentManager().findFragmentByTag(MAIN_FRAGMENT_TAG)).
-                        add(R.id.root_main_activity, new AddSongFragment(), ADD_SONG_FRAGMENT_TAG).
-                        addToBackStack(null).commit();
-            }
-        });
-
-
     }
 }

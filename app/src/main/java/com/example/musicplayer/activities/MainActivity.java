@@ -1,25 +1,17 @@
 package com.example.musicplayer.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.musicplayer.R;
+import com.example.musicplayer.controller.FileHandler;
 import com.example.musicplayer.fragments.AddSongFragment;
 import com.example.musicplayer.fragments.DeleteDialogFragment;
 import com.example.musicplayer.fragments.MainFragment;
-import com.example.musicplayer.model.MusicPlayer;
 import com.example.musicplayer.model.Song;
-import com.example.musicplayer.model.SongAdapter;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements DeleteDialogFragment.DeleteDialogListener,
         AddSongFragment.AddSongListener {
@@ -33,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
         // Hide ActionBar.
         if (getSupportActionBar() != null) { getSupportActionBar().hide(); }
 
+        // Add Main-Fragment.
         getSupportFragmentManager().beginTransaction().
                 add(R.id.root_main_activity, new MainFragment(), MAIN_FRAGMENT_TAG).commit();
     }
@@ -43,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
         Toast.makeText(MainActivity.this, songName + " removed", Toast.LENGTH_SHORT).show();
         MainFragment.songs.remove(position);
         MainFragment.songAdapter.notifyItemRemoved(position);
+        FileHandler.SaveSongArrayList(getApplicationContext(), MainFragment.songs);
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -58,5 +52,6 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
         Toast.makeText(this, songName + " added", Toast.LENGTH_SHORT).show();
         MainFragment.songs.add(0, song);
         MainFragment.songAdapter.notifyDataSetChanged();
+        FileHandler.SaveSongArrayList(getApplicationContext(), MainFragment.songs);
     }
 }
