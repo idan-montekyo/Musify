@@ -205,15 +205,15 @@ public class AddSongFragment extends Fragment implements HelpFragment.OnSongSugg
                 songUriLink = songUriLinkEt.getText().toString();
 
                 if (song.equals("")) {
-                    Toast.makeText(getContext(), "Please fill in song name", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getResources().getString(R.string.please_fill_in_song_name), Toast.LENGTH_SHORT).show();
                 } else if (singer.equals("")) {
-                    Toast.makeText(getContext(), "Please fill in singer name", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getResources().getString(R.string.please_fill_in_singer_name), Toast.LENGTH_SHORT).show();
                 } else if (minutes.equals("") || seconds.equals("")) {
-                    Toast.makeText(getContext(), "Please fill in duration", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getResources().getString(R.string.please_fill_in_duration), Toast.LENGTH_SHORT).show();
                 } else if (Integer.parseInt(seconds) > 59) {
-                    Toast.makeText(getContext(), "Seconds field may be 0-59", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getResources().getString(R.string.seconds_field_may_be_0_to_59), Toast.LENGTH_SHORT).show();
                 } else if (songUriLink.equals("")) {
-                    Toast.makeText(getContext(), "Please add Url Link to a song from YouTube", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getResources().getString(R.string.please_add_url_link_to_a_song), Toast.LENGTH_SHORT).show();
                 } else {
                     if (Integer.parseInt(seconds) >= 10) {
                         duration = minutes + ":" + seconds;

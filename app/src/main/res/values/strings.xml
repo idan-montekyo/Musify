@@ -1,4 +1,35 @@
 <resources>
-    <string name="app_name">Musify</string>
+    <string name="app_name" translatable="false">Musify</string>
     <string name="musify_idan_montekyo" translatable="false">Musify - Idan Montekyo</string>
+    <string name="add_a_new_song">ADD A NEW SONG</string>
+    <string name="add_song">Song:</string>
+    <string name="insert_song_s_name">Insert song\'s name</string>
+    <string name="add_singer">Singer:</string>
+    <string name="insert_singer_s_name">Insert singer\'s name</string>
+    <string name="add_duration">Duration:</string>
+    <string name="minutes">Minutes</string>
+    <string name="seconds">Seconds</string>
+    <string name="add_link">Link:</string>
+    <string name="add_compatible_url_link_for_the_song">Add [compatible] url link for the song</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="add">ADD</string>
+    <string name="need_help">NEED HELP ?</string>
+    <string name="hi_im_here_to_help">Hi! I\'m here to help!</string>
+    <string name="having_trouble_try_our_custom_song_receiver">Having trouble adding new songs?\nTry our custom song receiver!</string>
+    <string name="help_frag_full_data_songs">I know you are lazy...\nThese three songs have full data included :)</string>
+    <string name="help_frag_no_img_songs">Now try adding photos yourself!</string>
+    <string name="play_all">Play all</string>
+    <string name="add_new_song">ADD SONG</string>
+    <string name="please_fill_in_song_name">Please fill in song name</string>
+    <string name="please_fill_in_singer_name">Please fill in singer name</string>
+    <string name="please_fill_in_duration">Please fill in duration</string>
+    <string name="seconds_field_may_be_0_to_59">Seconds field may be 0-59</string>
+    <string name="please_add_url_link_to_a_song">Please add Url Link to a song</string>
+    <string name="_removed">" removed"</string>
+    <string name="_added">" added"</string>
+    <string name="delete_song">DELETE SONG</string>
+    <string name="are_you_sure_you_want_to_delete_this_song">Are you sure you want to delete this song?</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
 </resources>

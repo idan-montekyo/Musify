@@ -12,12 +12,13 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_margin="15dp"
-        android:src="@drawable/x_button_display_bb86fc"/>
+        android:src="@drawable/x_button_display_bb86fc"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ADD A NEW SONG"
+        android:text="@string/add_a_new_song"
         android:textSize="30sp"
         android:textColor="@color/purple_200"
         android:layout_centerHorizontal="true"
@@ -36,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Song:"
+            android:text="@string/add_song"
             android:textColor="@color/white"
             android:textSize="15sp" />
 
@@ -47,17 +48,18 @@
             android:layout_gravity="center_horizontal"
             android:background="@drawable/round_text_frame"
             android:gravity="center"
-            android:hint="Insert song's name"
+            android:hint="@string/insert_song_s_name"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
-            android:textSize="25sp" />
+            android:textSize="25sp"
+            tools:ignore="Autofill,TextFields" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
-            android:text="Singer:"
+            android:text="@string/add_singer"
             android:textColor="@color/white"
             android:textSize="15sp" />
 
@@ -68,17 +70,18 @@
             android:layout_gravity="center_horizontal"
             android:background="@drawable/round_text_frame"
             android:gravity="center"
-            android:hint="Insert Singer's name"
+            android:hint="@string/insert_singer_s_name"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
-            android:textSize="25sp" />
+            android:textSize="25sp"
+            tools:ignore="Autofill,TextFields" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
-            android:text="Duration:"
+            android:text="@string/add_duration"
             android:textColor="@color/white"
             android:textSize="15sp" />
 
@@ -95,11 +98,12 @@
                 android:layout_height="match_parent"
                 android:background="@null"
                 android:gravity="center"
-                android:hint="Minutes"
+                android:hint="@string/minutes"
                 android:inputType="number"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                tools:ignore="Autofill" />
 
             <TextView
                 android:layout_width="10dp"
@@ -116,11 +120,12 @@
                 android:layout_height="match_parent"
                 android:background="@null"
                 android:gravity="center"
-                android:hint="Seconds"
+                android:hint="@string/seconds"
                 android:inputType="number"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                tools:ignore="Autofill" />
 
         </LinearLayout>
 
@@ -129,7 +134,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
-            android:text="Link:"
+            android:text="@string/add_link"
             android:textColor="@color/white"
             android:textSize="15sp" />
 
@@ -140,10 +145,11 @@
             android:layout_gravity="center_horizontal"
             android:background="@drawable/round_text_frame"
             android:gravity="center"
-            android:hint="Add [compatible] url link for the song"
+            android:hint="@string/add_compatible_url_link_for_the_song"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            tools:ignore="Autofill,TextFields" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -157,8 +163,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/purple_500"
-                android:text="Take picture"
-                android:textSize="15sp" />
+                android:text="@string/camera"
+                android:textSize="12.5sp"
+                android:drawableEnd="@android:drawable/ic_menu_camera"/>
 
             <View
                 android:layout_width="15dp"
@@ -169,8 +176,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/purple_500"
-                android:text="Pick from gallery"
-                android:textSize="15sp" />
+                android:text="@string/gallery"
+                android:textSize="12.5sp"
+                android:drawableEnd="@android:drawable/ic_menu_gallery"/>
 
         </LinearLayout>
 
@@ -187,7 +195,8 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/musify_icon_round" />
+                android:src="@drawable/musify_icon_round"
+                tools:ignore="ContentDescription" />
 
             <View
                 android:layout_width="25dp"
@@ -197,7 +206,8 @@
                 android:id="@+id/imageview_add_img_square"
                 android:layout_width="175dp"
                 android:layout_height="175dp"
-                android:src="@mipmap/ic_launcher" />
+                android:src="@mipmap/ic_launcher"
+                tools:ignore="ContentDescription" />
 
         </LinearLayout>
 
@@ -216,7 +226,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/purple_200"
-            android:text="ADD"
+            android:text="@string/add"
             android:textSize="20sp" />
 
         <View
@@ -228,7 +238,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/red"
-            android:text="NEED HELP ?"
+            android:text="@string/need_help"
             android:textSize="20sp" />
 
     </LinearLayout>

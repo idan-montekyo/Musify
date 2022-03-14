@@ -1,4 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Musify</string>
+    <string name="add_a_new_song">הוסף שיר חדש</string>
+    <string name="add_song">שיר:</string>
+    <string name="insert_song_s_name">הכנס את שם השיר</string>
+    <string name="add_singer">זמר:</string>
+    <string name="insert_singer_s_name">הכנס את שם הזמר</string>
+    <string name="add_duration">זמן:</string>
+    <string name="minutes">דקות</string>
+    <string name="seconds">שניות</string>
+    <string name="add_link">קישור:</string>
+    <string name="add_compatible_url_link_for_the_song">הוסף קישור [מתאים] לשיר במרשתת</string>
+    <string name="camera">מצלמה</string>
+    <string name="gallery">גלריה</string>
+    <string name="add">הוסף</string>
+    <string name="need_help">צריך עזרה ?</string>
+    <string name="hi_im_here_to_help">היי! אני כאן לעזור!</string>
+    <string name="having_trouble_try_our_custom_song_receiver">הסתבכת? השתמש במוסיף האוטומטי!</string>
+    <string name="help_frag_full_data_songs">אתה בטח מתעצל... הוסף שירים מלאים :)</string>
+    <string name="help_frag_no_img_songs">עכשיו נסה להוסיף תמונה בעצמך!</string>
+    <string name="play_all">נגן הכל</string>
+    <string name="add_new_song">הוסף שיר</string>
+    <string name="please_fill_in_song_name">אנא הזן את שם השיר</string>
+    <string name="please_fill_in_singer_name">אנא הזן את שם הזמר</string>
+    <string name="please_fill_in_duration">אנא הזן את אורך השיר</string>
+    <string name="seconds_field_may_be_0_to_59">שניות יכולות להיות 0-59</string>
+    <string name="please_add_url_link_to_a_song">אנא הוסף קישור לשיר</string>
+    <string name="_removed">" הוסר"</string>
+    <string name="_added">" נוסף"</string>
+    <string name="delete_song">מחיקת שיר</string>
+    <string name="are_you_sure_you_want_to_delete_this_song">האם אתה בטוח שברצונך למחוק את שיר זה?</string>
+    <string name="delete">מחק</string>
+    <string name="cancel">ביטול</string>
 </resources>

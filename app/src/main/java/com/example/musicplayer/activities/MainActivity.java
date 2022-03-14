@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
     @Override
     public void onPositiveButtonClicked(int position) {
         String songName = MainFragment.songs.get(position).getSong();
-        Toast.makeText(MainActivity.this, songName + " removed", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, songName + getResources().getString(R.string._removed), Toast.LENGTH_SHORT).show();
         MainFragment.songs.remove(position);
         MainFragment.songAdapter.notifyItemRemoved(position);
         FileHandler.SaveSongArrayList(getApplicationContext(), MainFragment.songs);
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
     @Override
     public void onAddButtonClicked(Song song) {
         String songName = song.getSong();
-        Toast.makeText(this, songName + " added", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, songName + getResources().getString(R.string._added), Toast.LENGTH_SHORT).show();
         MainFragment.songs.add(0, song);
         MainFragment.songAdapter.notifyDataSetChanged();
         FileHandler.SaveSongArrayList(getApplicationContext(), MainFragment.songs);

@@ -10,9 +10,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
-import com.example.musicplayer.model.Song;
+import com.example.musicplayer.R;
 
-import java.util.List;
+import java.util.Objects;
 
 public class DeleteDialogFragment extends DialogFragment {
 
@@ -51,17 +51,18 @@ public class DeleteDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
         setCancelable(false);
 
-        builder.setTitle("DELETE SONG").setMessage("Are you sure you want to delete this song?").
-                setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+        builder.setTitle(getResources().getString(R.string.delete_song)).
+                setMessage(getResources().getString(R.string.are_you_sure_you_want_to_delete_this_song)).
+                setPositiveButton(getResources().getString(R.string.delete), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         assert getArguments() != null;
                         callBack.onPositiveButtonClicked(getArguments().getInt(ARG_POSITION));
                     }
-                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                }).setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 callBack.onNegativeButtonClicked();

@@ -14,7 +14,8 @@
         android:layout_marginTop="15dp"
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="15dp"
-        android:src="@drawable/x_button_display_bb86fc" />
+        android:src="@drawable/x_button_display_bb86fc"
+        tools:ignore="ContentDescription" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,7 +27,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hi! I'm here to help!"
+            android:text="@string/hi_im_here_to_help"
             android:textSize="40sp"
             android:textColor="@color/purple_200"/>
 
@@ -34,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
-            android:text="Having trouble adding new songs?\nTry our custom song receiver!"
+            android:text="@string/having_trouble_try_our_custom_song_receiver"
             android:textSize="22.5sp"
             android:textColor="@color/white"
             android:gravity="center"/>
@@ -43,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
-            android:text="I know you are lazy...\nThese three songs have full data included :)"
+            android:text="@string/help_frag_full_data_songs"
             android:textColor="@color/white"
             android:textSize="17.5sp"
             android:gravity="center"/>
@@ -79,9 +80,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
-            android:text="Now try adding photos yourself!"
+            android:text="@string/help_frag_no_img_songs"
             android:textColor="@color/white"
-            android:textSize="17.5dp"
+            android:textSize="17.5sp"
             android:gravity="center"/>
 
 

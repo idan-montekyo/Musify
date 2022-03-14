@@ -20,7 +20,8 @@
         android:layout_marginEnd="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:gravity="center"/>
+        android:gravity="center"
+        tools:ignore="RelativeOverlap" />
 
     <ImageView
         android:id="@+id/imageview_main_logo"
@@ -31,7 +32,8 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
-        android:src="@drawable/musify_icon_round" />
+        android:src="@drawable/musify_icon_round"
+        tools:ignore="ContentDescription" />
 
     <Button
         android:id="@+id/button_play_all"
@@ -42,8 +44,9 @@
         android:layout_centerHorizontal="true"
         android:drawableEnd="@android:drawable/ic_media_play"
         android:backgroundTint="@color/dark_background2"
-        android:text="Play all"
-        android:textSize="11sp" />
+        android:text="@string/play_all"
+        android:textSize="11sp"
+        tools:ignore="RelativeOverlap" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler"
@@ -62,7 +65,7 @@
         android:layout_marginBottom="20dp"
         android:drawableEnd="@android:drawable/stat_notify_more"
         android:backgroundTint="@color/purple_200"
-        android:text="ADD SONG"
+        android:text="@string/add_new_song"
         android:textSize="15sp" />
 
 </RelativeLayout>

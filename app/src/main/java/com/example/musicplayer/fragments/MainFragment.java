@@ -24,13 +24,11 @@ import com.example.musicplayer.model.Song;
 import com.example.musicplayer.model.SongAdapter;
 import com.example.musicplayer.services.MusicPlayerService;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
 
 // TODO:
-//  1. Convert all local strings to string-resource, that can be translated to Hebrew also.
 //  2. Replace deprecated set/getTargetFragment in AddSongFragment & HelpFragment - https://stackoverflow.com/questions/64869501/how-to-replace-settargetfragment-now-that-it-is-deprecated
 //  3. Make DeleteDialogFragment communicate directly to MainFragment instead of MainActivity.
 public class MainFragment extends Fragment {
@@ -81,7 +79,7 @@ public class MainFragment extends Fragment {
 
         songAdapter.setListener(new SongAdapter.MySongListener() {
             @Override
-            public void onSongClicked(int index, View view) throws IOException {
+            public void onSongClicked(int index, View view) {
 
                 SongDisplayFragment songDisplayFragment = SongDisplayFragment.newInstance(songs.get(index));
                 getParentFragmentManager().beginTransaction().

@@ -36,7 +36,7 @@ public class FileHandler {
     // Needed for:
     //  1. when app starts running (MainFragment)
     public static ArrayList<Song> getSongArrayList(Context context){
-        ArrayList<Song> mSongList = null;
+        ArrayList<Song> mSongList;
 
         SharedPreferences sharedPreferences = context.getSharedPreferences(SP_TAG, Context.MODE_PRIVATE);
         Gson gson = new Gson();
