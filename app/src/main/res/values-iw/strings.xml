@@ -13,7 +13,7 @@
     <string name="camera">מצלמה</string>
     <string name="gallery">גלריה</string>
     <string name="add">הוסף</string>
-    <string name="need_help">צריך עזרה ?</string>
+    <string name="help">עזרה</string>
     <string name="hi_im_here_to_help">היי! אני כאן לעזור!</string>
     <string name="having_trouble_try_our_custom_song_receiver">הסתבכת? השתמש במוסיף האוטומטי!</string>
     <string name="help_frag_full_data_songs">אתה בטח מתעצל... הוסף שירים מלאים :)</string>
@@ -22,8 +22,6 @@
     <string name="add_new_song">הוסף שיר</string>
     <string name="please_fill_in_song_name">אנא הזן את שם השיר</string>
     <string name="please_fill_in_singer_name">אנא הזן את שם הזמר</string>
-    <string name="please_fill_in_duration">אנא הזן את אורך השיר</string>
-    <string name="seconds_field_may_be_0_to_59">שניות יכולות להיות 0-59</string>
     <string name="please_add_url_link_to_a_song">אנא הוסף קישור לשיר</string>
     <string name="_removed">" הוסר"</string>
     <string name="_added">" נוסף"</string>

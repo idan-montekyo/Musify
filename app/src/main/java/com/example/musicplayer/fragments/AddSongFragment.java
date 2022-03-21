@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.icu.text.SimpleDateFormat;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import androidx.fragment.app.Fragment;
 
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,13 +55,16 @@ public class AddSongFragment extends Fragment implements HelpFragment.OnSongSugg
     final String ADD_SONG_FRAGMENT_TAG = "add_song_fragment";
     final String HELP_FRAGMENT_TAG = "help_fragment";
 
-    EditText songEt, singerEt, minutesEt, secondsEt, songUriLinkEt;
+    EditText songEt, singerEt, songUriLinkEt;
     Button takePictureBtn, pickFromGalleryBtn, addSongBtn, needHelpBtn;
     ImageView roundImgIv, squareImgIv, exitIv;
 
     private int drawable = R.drawable.musify_icon_round;
     private Song newSong;
     private String song, singer, minutes, seconds, songUriLink, duration, imgUri = "";
+
+    MediaPlayer mediaPlayerToMeasureLength;
+    private int durationInMilliseconds;
 
     private String currentPhotoPath;
 
@@ -72,6 +77,9 @@ public class AddSongFragment extends Fragment implements HelpFragment.OnSongSugg
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+
+        mediaPlayerToMeasureLength = new MediaPlayer();
+        mediaPlayerToMeasureLength.reset();
 
         try {
             callBack = (AddSongListener)context;
@@ -128,8 +136,6 @@ public class AddSongFragment extends Fragment implements HelpFragment.OnSongSugg
 
         songEt = view.findViewById(R.id.edittext_add_song);
         singerEt = view.findViewById(R.id.edittext_add_singer);
-        minutesEt = view.findViewById(R.id.edittext_add_minutes);
-        secondsEt = view.findViewById(R.id.edittext_add_seconds);
         songUriLinkEt = view.findViewById(R.id.edittext_add_link);
         roundImgIv = view.findViewById(R.id.imageview_add_img_round);
         squareImgIv = view.findViewById(R.id.imageview_add_img_square);
@@ -198,31 +204,38 @@ public class AddSongFragment extends Fragment implements HelpFragment.OnSongSugg
         addSongBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                try {
+                    mediaPlayerToMeasureLength.setDataSource(songUriLinkEt.getText().toString());
+                    mediaPlayerToMeasureLength.prepare();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 song = songEt.getText().toString();
                 singer = singerEt.getText().toString();
-                minutes = minutesEt.getText().toString();
-                seconds = secondsEt.getText().toString();
                 songUriLink = songUriLinkEt.getText().toString();
+
+                durationInMilliseconds = mediaPlayerToMeasureLength.getDuration();
+                minutes = (int)(durationInMilliseconds % (1000 * 60 * 60)) / (1000 * 60) + "";
+                seconds = (int)((durationInMilliseconds % (1000 * 60 * 60)) % (1000 * 60) / 1000) + "";
+                if (Integer.parseInt(seconds) < 10) { seconds = "0" + seconds; }
+                duration = minutes + ":" + seconds;
 
                 if (song.equals("")) {
                     Toast.makeText(getContext(), getResources().getString(R.string.please_fill_in_song_name), Toast.LENGTH_SHORT).show();
                 } else if (singer.equals("")) {
                     Toast.makeText(getContext(), getResources().getString(R.string.please_fill_in_singer_name), Toast.LENGTH_SHORT).show();
-                } else if (minutes.equals("") || seconds.equals("")) {
-                    Toast.makeText(getContext(), getResources().getString(R.string.please_fill_in_duration), Toast.LENGTH_SHORT).show();
-                } else if (Integer.parseInt(seconds) > 59) {
-                    Toast.makeText(getContext(), getResources().getString(R.string.seconds_field_may_be_0_to_59), Toast.LENGTH_SHORT).show();
                 } else if (songUriLink.equals("")) {
                     Toast.makeText(getContext(), getResources().getString(R.string.please_add_url_link_to_a_song), Toast.LENGTH_SHORT).show();
                 } else {
-                    if (Integer.parseInt(seconds) >= 10) {
-                        duration = minutes + ":" + seconds;
-                    } else {
-                        duration = minutes + ":0" + seconds;
-                    }
                     newSong = new Song(drawable, imgUri, song, singer, duration, songUriLink);
                     getParentFragmentManager().popBackStack();
                     callBack.onAddButtonClicked(newSong);
+
+                    // Release mediaPlayer
+                    mediaPlayerToMeasureLength.reset();
+                    mediaPlayerToMeasureLength.release();
                 }
             }
         });
@@ -251,8 +264,6 @@ public class AddSongFragment extends Fragment implements HelpFragment.OnSongSugg
             case 1:
                 songEt.setText("Human");
                 singerEt.setText("Rag'n'Bone Man");
-                minutesEt.setText("3");
-                secondsEt.setText("17");
                 songUriLinkEt.setText("https://www.mboxdrive.com/human.mp3");
                 drawable = R.drawable.img_human;
                 squareImgIv.setImageResource(R.drawable.img_human);
@@ -263,8 +274,6 @@ public class AddSongFragment extends Fragment implements HelpFragment.OnSongSugg
             case 2:
                 songEt.setText("Is This Love");
                 singerEt.setText("Bob Marley");
-                minutesEt.setText("3");
-                secondsEt.setText("51");
                 songUriLinkEt.setText("https://www.mboxdrive.com/is_this_love.mp3");
                 drawable = R.drawable.img_is_this_love;
                 squareImgIv.setImageResource(R.drawable.img_is_this_love);
@@ -274,8 +283,6 @@ public class AddSongFragment extends Fragment implements HelpFragment.OnSongSugg
             case 3:
                 songEt.setText("In The End");
                 singerEt.setText("Linkin Park");
-                minutesEt.setText("3");
-                secondsEt.setText("38");
                 songUriLinkEt.setText("https://www.mboxdrive.com/in_the_end_.mp3");
                 drawable = R.drawable.img_in_the_end;
                 squareImgIv.setImageResource(R.drawable.img_in_the_end);
@@ -285,22 +292,16 @@ public class AddSongFragment extends Fragment implements HelpFragment.OnSongSugg
             case 4:
                 songEt.setText("Song #1");
                 singerEt.setText("Unknown");
-                minutesEt.setText("3");
-                secondsEt.setText("47");
                 songUriLinkEt.setText("https://www.syntax.org.il/xtra/bob.m4a");
                 break;
             case 5:
                 songEt.setText("Song #2");
-                singerEt.setText("UnknownUnknown");
-                minutesEt.setText("5");
-                secondsEt.setText("31");
+                singerEt.setText("Unknown");
                 songUriLinkEt.setText("https://www.syntax.org.il/xtra/bob1.m4a");
                 break;
             case 6:
                 songEt.setText("Song #3");
                 singerEt.setText("Unknown");
-                minutesEt.setText("3");
-                secondsEt.setText("6");
                 songUriLinkEt.setText("https://www.syntax.org.il/xtra/bob2.mp3");
                 break;
         }

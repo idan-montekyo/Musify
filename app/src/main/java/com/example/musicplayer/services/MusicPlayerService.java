@@ -96,12 +96,14 @@ public class MusicPlayerService extends Service
                 break;
 
             case NEXT_TAG:
+                remoteViews.setImageViewResource(R.id.imagebutton_play_pause_btn, android.R.drawable.ic_media_pause);
                 currentIndex = (currentIndex + 1) % mSongs.size();
                 setViewsAndCreateNotification();
                 launchSong();
                 break;
 
             case PREV_TAG:
+                remoteViews.setImageViewResource(R.id.imagebutton_play_pause_btn, android.R.drawable.ic_media_pause);
                 currentIndex -= 1;
                 if (currentIndex == -1)
                     currentIndex = mSongs.size() - 1;

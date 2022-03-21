@@ -14,7 +14,7 @@
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>
     <string name="add">ADD</string>
-    <string name="need_help">NEED HELP ?</string>
+    <string name="help">HELP</string>
     <string name="hi_im_here_to_help">Hi! I\'m here to help!</string>
     <string name="having_trouble_try_our_custom_song_receiver">Having trouble adding new songs?\nTry our custom song receiver!</string>
     <string name="help_frag_full_data_songs">I know you are lazy...\nThese three songs have full data included :)</string>
@@ -23,8 +23,6 @@
     <string name="add_new_song">ADD SONG</string>
     <string name="please_fill_in_song_name">Please fill in song name</string>
     <string name="please_fill_in_singer_name">Please fill in singer name</string>
-    <string name="please_fill_in_duration">Please fill in duration</string>
-    <string name="seconds_field_may_be_0_to_59">Seconds field may be 0-59</string>
     <string name="please_add_url_link_to_a_song">Please add Url Link to a song</string>
     <string name="_removed">" removed"</string>
     <string name="_added">" added"</string>

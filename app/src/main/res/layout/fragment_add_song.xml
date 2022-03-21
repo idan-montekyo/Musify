@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.AddSongFragment"
     android:background="@color/dark_background2"
     android:id="@+id/root_add_song">
@@ -18,11 +19,11 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/add_a_new_song"
-        android:textSize="30sp"
-        android:textColor="@color/purple_200"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="20dp"
+        android:text="@string/add_a_new_song"
+        android:textColor="@color/purple_200"
+        android:textSize="30sp" />
 
     <LinearLayout
         android:id="@+id/linearlayout_mid_container"
@@ -30,8 +31,9 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center_horizontal"
-        android:paddingBottom="30dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="25dp"
+        android:paddingBottom="50dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -44,14 +46,14 @@
         <EditText
             android:id="@+id/edittext_add_song"
             android:layout_width="300dp"
-            android:layout_height="30dp"
+            android:layout_height="40dp"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/round_text_frame"
             android:gravity="center"
             android:hint="@string/insert_song_s_name"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
-            android:textSize="25sp"
+            android:textSize="17.5sp"
             tools:ignore="Autofill,TextFields" />
 
         <TextView
@@ -66,68 +68,15 @@
         <EditText
             android:id="@+id/edittext_add_singer"
             android:layout_width="300dp"
-            android:layout_height="30dp"
+            android:layout_height="40dp"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/round_text_frame"
             android:gravity="center"
             android:hint="@string/insert_singer_s_name"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
-            android:textSize="25sp"
+            android:textSize="17.5sp"
             tools:ignore="Autofill,TextFields" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="15dp"
-            android:text="@string/add_duration"
-            android:textColor="@color/white"
-            android:textSize="15sp" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/round_text_frame"
-            android:orientation="horizontal">
-
-            <EditText
-                android:id="@+id/edittext_add_minutes"
-                android:layout_width="75dp"
-                android:layout_height="match_parent"
-                android:background="@null"
-                android:gravity="center"
-                android:hint="@string/minutes"
-                android:inputType="number"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
-                android:textSize="15sp"
-                tools:ignore="Autofill" />
-
-            <TextView
-                android:layout_width="10dp"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text=":"
-                android:textColor="@color/white"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/edittext_add_seconds"
-                android:layout_width="75dp"
-                android:layout_height="match_parent"
-                android:background="@null"
-                android:gravity="center"
-                android:hint="@string/seconds"
-                android:inputType="number"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
-                android:textSize="15sp"
-                tools:ignore="Autofill" />
-
-        </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
@@ -141,7 +90,7 @@
         <EditText
             android:id="@+id/edittext_add_link"
             android:layout_width="300dp"
-            android:layout_height="45dp"
+            android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/round_text_frame"
             android:gravity="center"
@@ -154,7 +103,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="25dp"
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 
@@ -163,9 +112,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/purple_500"
+                android:drawableEnd="@android:drawable/ic_menu_camera"
                 android:text="@string/camera"
-                android:textSize="12.5sp"
-                android:drawableEnd="@android:drawable/ic_menu_camera"/>
+                android:textSize="12.5sp" />
 
             <View
                 android:layout_width="15dp"
@@ -176,9 +125,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/purple_500"
+                android:drawableEnd="@android:drawable/ic_menu_gallery"
                 android:text="@string/gallery"
-                android:textSize="12.5sp"
-                android:drawableEnd="@android:drawable/ic_menu_gallery"/>
+                android:textSize="12.5sp" />
 
         </LinearLayout>
 
@@ -186,7 +135,7 @@
             android:id="@+id/linearlayout_photos_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 
@@ -227,7 +176,8 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/purple_200"
             android:text="@string/add"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:drawableEnd="@android:drawable/stat_notify_more"/>
 
         <View
             android:layout_width="25dp"
@@ -236,10 +186,12 @@
         <Button
             android:id="@+id/button_add_need_help"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/red"
-            android:text="@string/need_help"
-            android:textSize="20sp" />
+            android:layout_height="match_parent"
+            android:backgroundTint="@color/dark_background2"
+            app:strokeColor="@color/purple_200"
+            app:strokeWidth="2dp"
+            android:text="@string/help"
+            android:textSize="15sp" />
 
     </LinearLayout>
 
